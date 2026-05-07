@@ -273,7 +273,7 @@ export default function Onboarding() {
             <Text style={styles.tag}>{slide.tag}</Text>
             <View style={styles.iconRing}>
               {index === 0
-                ? <AnimatedCoffeeCup fillAnim={slideFillAnim} stroke="#000" fill="rgba(0,0,0,0.1)" clipId="slideCup" />
+                ? <AnimatedCoffeeCup fillAnim={slideFillAnim} stroke="#000" fill="rgba(0,0,0,0.1)" clipId="slideCup" size={68} />
                 : <Icon color="#000" size={42} strokeWidth={1.2} />}
             </View>
             <View style={styles.textBlock}>
