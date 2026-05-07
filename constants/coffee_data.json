@@ -1,0 +1,886 @@
+{
+  "meta": {
+    "title": "Coffee Drinks Caffeine Reference",
+    "description": "Comprehensive caffeine data for all major coffee drink types including hot, iced, cold brew, blended, and specialty variants.",
+    "daily_limit_mg": 400,
+    "daily_limit_note": "FDA recommended maximum for healthy adults. Pregnant individuals: stay under 200mg/day.",
+    "caffeine_note": "All values are approximate. Actual caffeine varies by bean type (Robusta ~2x Arabica), roast, grind, water temp, and serving size. Ice does not reduce caffeine.",
+    "last_updated": "2026-05-08",
+    "total_drinks": 44
+  },
+  "categories": [
+    {
+      "id": "espresso_based",
+      "label": "Espresso-based (hot)",
+      "drinks": [
+        {
+          "id": "espresso_single",
+          "name": "Espresso (single shot)",
+          "description": "30 ml concentrated shot pulled under high pressure through finely ground beans.",
+          "caffeine_mg": {
+            "min": 60,
+            "max": 65,
+            "typical": 63
+          },
+          "serving_ml": 30,
+          "serving_oz": 1,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 16,
+          "served_hot": true,
+          "served_iced": false,
+          "milk": false,
+          "origin": null
+        },
+        {
+          "id": "doppio",
+          "name": "Doppio (double espresso)",
+          "description": "Two espresso shots pulled together. The standard base for most caf\u00e9 drinks.",
+          "caffeine_mg": {
+            "min": 120,
+            "max": 130,
+            "typical": 126
+          },
+          "serving_ml": 60,
+          "serving_oz": 2,
+          "caffeine_level": "high",
+          "pct_daily_limit": 32,
+          "served_hot": true,
+          "served_iced": false,
+          "milk": false,
+          "origin": "Italy"
+        },
+        {
+          "id": "ristretto",
+          "name": "Ristretto",
+          "description": "Half the water of a regular espresso \u2014 smaller, sweeter, more concentrated flavor.",
+          "caffeine_mg": {
+            "min": 50,
+            "max": 65,
+            "typical": 58
+          },
+          "serving_ml": 18,
+          "serving_oz": 0.6,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 14,
+          "served_hot": true,
+          "served_iced": false,
+          "milk": false,
+          "origin": "Italy"
+        },
+        {
+          "id": "lungo",
+          "name": "Lungo",
+          "description": "Espresso pulled with more water (double volume), more bitter and slightly more caffeine.",
+          "caffeine_mg": {
+            "min": 70,
+            "max": 85,
+            "typical": 77
+          },
+          "serving_ml": 60,
+          "serving_oz": 2,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 19,
+          "served_hot": true,
+          "served_iced": false,
+          "milk": false,
+          "origin": "Italy"
+        },
+        {
+          "id": "americano",
+          "name": "Americano",
+          "description": "Espresso diluted with hot water to approximate drip coffee strength.",
+          "caffeine_mg": {
+            "min": 63,
+            "max": 125,
+            "typical": 95
+          },
+          "serving_ml": 240,
+          "serving_oz": 8,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 22,
+          "served_hot": true,
+          "served_iced": true,
+          "milk": false,
+          "origin": null
+        },
+        {
+          "id": "cappuccino",
+          "name": "Cappuccino",
+          "description": "Equal parts espresso, steamed milk, and thick milk foam. Classic Italian morning drink.",
+          "caffeine_mg": {
+            "min": 60,
+            "max": 80,
+            "typical": 63
+          },
+          "serving_ml": 165,
+          "serving_oz": 6,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 16,
+          "served_hot": true,
+          "served_iced": true,
+          "milk": true,
+          "origin": "Italy"
+        },
+        {
+          "id": "latte",
+          "name": "Latte",
+          "description": "Single/double espresso with lots of steamed milk and a thin layer of foam. Mild coffee flavor.",
+          "caffeine_mg": {
+            "min": 63,
+            "max": 126,
+            "typical": 90
+          },
+          "serving_ml": 300,
+          "serving_oz": 10,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 22,
+          "served_hot": true,
+          "served_iced": true,
+          "milk": true,
+          "origin": "Italy"
+        },
+        {
+          "id": "flat_white",
+          "name": "Flat white",
+          "description": "Double ristretto with microfoam milk. Smaller and stronger than a latte. Australian origin.",
+          "caffeine_mg": {
+            "min": 120,
+            "max": 140,
+            "typical": 130
+          },
+          "serving_ml": 165,
+          "serving_oz": 6,
+          "caffeine_level": "high",
+          "pct_daily_limit": 33,
+          "served_hot": true,
+          "served_iced": true,
+          "milk": true,
+          "origin": "Australia"
+        },
+        {
+          "id": "macchiato",
+          "name": "Macchiato",
+          "description": "Espresso 'stained' with a small amount of milk foam.",
+          "caffeine_mg": {
+            "min": 60,
+            "max": 70,
+            "typical": 63
+          },
+          "serving_ml": 75,
+          "serving_oz": 2.5,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 16,
+          "served_hot": true,
+          "served_iced": true,
+          "milk": true,
+          "origin": "Italy"
+        },
+        {
+          "id": "mocha",
+          "name": "Mocha",
+          "description": "Espresso with chocolate syrup and steamed milk. A dessert-style coffee drink.",
+          "caffeine_mg": {
+            "min": 90,
+            "max": 175,
+            "typical": 130
+          },
+          "serving_ml": 240,
+          "serving_oz": 8,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 28,
+          "served_hot": true,
+          "served_iced": true,
+          "milk": true,
+          "origin": null
+        },
+        {
+          "id": "cortado",
+          "name": "Cortado",
+          "description": "Equal parts espresso and warm milk. Spanish origin. Less foam than a cappuccino.",
+          "caffeine_mg": {
+            "min": 60,
+            "max": 70,
+            "typical": 63
+          },
+          "serving_ml": 105,
+          "serving_oz": 3.5,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 16,
+          "served_hot": true,
+          "served_iced": true,
+          "milk": true,
+          "origin": "Spain"
+        },
+        {
+          "id": "spanish_latte",
+          "name": "Spanish latte (Caf\u00e9 con leche condensada)",
+          "description": "Espresso + sweetened condensed milk + regular milk. Richer and sweeter than a standard latte. Very popular in Southeast Asian caf\u00e9s when served iced.",
+          "caffeine_mg": {
+            "min": 63,
+            "max": 126,
+            "typical": 90
+          },
+          "serving_ml": 300,
+          "serving_oz": 10,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 24,
+          "served_hot": true,
+          "served_iced": true,
+          "milk": true,
+          "origin": "Spain"
+        },
+        {
+          "id": "affogato",
+          "name": "Affogato",
+          "description": "A scoop of vanilla gelato 'drowned' in a hot espresso shot. Dessert + coffee in one.",
+          "caffeine_mg": {
+            "min": 60,
+            "max": 70,
+            "typical": 63
+          },
+          "serving_ml": 90,
+          "serving_oz": 3,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 16,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": false,
+          "origin": "Italy"
+        },
+        {
+          "id": "irish_coffee",
+          "name": "Irish coffee",
+          "description": "Hot coffee with Irish whiskey and whipped cream. Alcohol slows but does not reduce caffeine absorption.",
+          "caffeine_mg": {
+            "min": 90,
+            "max": 100,
+            "typical": 95
+          },
+          "serving_ml": 240,
+          "serving_oz": 8,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 24,
+          "served_hot": true,
+          "served_iced": false,
+          "milk": false,
+          "origin": "Ireland"
+        },
+        {
+          "id": "dalgona_hot",
+          "name": "Dalgona coffee (hot)",
+          "description": "Whipped instant coffee foam (equal parts instant coffee, sugar, hot water) spooned over hot milk. Went viral in 2020. Origin: South Korea / India.",
+          "caffeine_mg": {
+            "min": 60,
+            "max": 100,
+            "typical": 80
+          },
+          "serving_ml": 240,
+          "serving_oz": 8,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 20,
+          "served_hot": true,
+          "served_iced": true,
+          "milk": true,
+          "origin": "South Korea"
+        }
+      ]
+    },
+    {
+      "id": "brewed_filter",
+      "label": "Brewed / filter coffee",
+      "drinks": [
+        {
+          "id": "drip_filter",
+          "name": "Drip / filter coffee",
+          "description": "Hot water passes through ground coffee. Standard American coffee. Widely variable by bean and ratio.",
+          "caffeine_mg": {
+            "min": 95,
+            "max": 200,
+            "typical": 145
+          },
+          "serving_ml": 240,
+          "serving_oz": 8,
+          "caffeine_level": "high",
+          "pct_daily_limit": 37,
+          "served_hot": true,
+          "served_iced": true,
+          "milk": false,
+          "origin": null
+        },
+        {
+          "id": "pour_over",
+          "name": "Pour-over (V60 / Chemex)",
+          "description": "Hand-poured hot water over grounds in a filter. Cleaner, brighter cup.",
+          "caffeine_mg": {
+            "min": 150,
+            "max": 200,
+            "typical": 175
+          },
+          "serving_ml": 330,
+          "serving_oz": 11,
+          "caffeine_level": "high",
+          "pct_daily_limit": 44,
+          "served_hot": true,
+          "served_iced": false,
+          "milk": false,
+          "origin": null
+        },
+        {
+          "id": "french_press",
+          "name": "French press",
+          "description": "Coarse grounds steeped in hot water, then pressed. Full-bodied, oily texture.",
+          "caffeine_mg": {
+            "min": 80,
+            "max": 135,
+            "typical": 107
+          },
+          "serving_ml": 240,
+          "serving_oz": 8,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 27,
+          "served_hot": true,
+          "served_iced": false,
+          "milk": false,
+          "origin": "France"
+        },
+        {
+          "id": "aeropress",
+          "name": "AeroPress",
+          "description": "Pressure + immersion hybrid. Produces espresso-like concentrate or Americano-style cup depending on dilution.",
+          "caffeine_mg": {
+            "min": 50,
+            "max": 150,
+            "typical": 100
+          },
+          "serving_ml": 180,
+          "serving_oz": 6,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 25,
+          "served_hot": true,
+          "served_iced": false,
+          "milk": false,
+          "origin": null
+        },
+        {
+          "id": "moka_pot",
+          "name": "Moka pot / stovetop percolator",
+          "description": "Stovetop brewer forces steam through packed grounds. Common in Italian households. Strong flavor.",
+          "caffeine_mg": {
+            "min": 100,
+            "max": 135,
+            "typical": 117
+          },
+          "serving_ml": 90,
+          "serving_oz": 3,
+          "caffeine_level": "high",
+          "pct_daily_limit": 29,
+          "served_hot": true,
+          "served_iced": false,
+          "milk": false,
+          "origin": "Italy"
+        },
+        {
+          "id": "turkish_coffee",
+          "name": "Turkish coffee",
+          "description": "Ultra-fine grounds boiled unfiltered in a small pot (cezve). Grounds settle at the bottom.",
+          "caffeine_mg": {
+            "min": 50,
+            "max": 65,
+            "typical": 58
+          },
+          "serving_ml": 75,
+          "serving_oz": 2.5,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 14,
+          "served_hot": true,
+          "served_iced": false,
+          "milk": false,
+          "origin": "Turkey"
+        }
+      ]
+    },
+    {
+      "id": "cold_brew",
+      "label": "Cold brew variants",
+      "drinks": [
+        {
+          "id": "cold_brew_straight",
+          "name": "Cold brew (straight)",
+          "description": "Grounds steeped 12\u201324 hrs in cold water, strained. Smooth, low acidity. Served over ice as-is.",
+          "caffeine_mg": {
+            "min": 150,
+            "max": 280,
+            "typical": 200
+          },
+          "serving_ml": 240,
+          "serving_oz": 8,
+          "caffeine_level": "very_high",
+          "pct_daily_limit": 54,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": false,
+          "origin": null
+        },
+        {
+          "id": "cold_brew_milk",
+          "name": "Cold brew with milk",
+          "description": "Cold brew diluted with cold milk or oat milk over ice. Softer flavor.",
+          "caffeine_mg": {
+            "min": 100,
+            "max": 200,
+            "typical": 150
+          },
+          "serving_ml": 360,
+          "serving_oz": 12,
+          "caffeine_level": "high",
+          "pct_daily_limit": 38,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": true,
+          "origin": null
+        },
+        {
+          "id": "nitro_cold_brew",
+          "name": "Nitro cold brew",
+          "description": "Cold brew infused with nitrogen gas. Creamy, stout-like texture. No ice needed.",
+          "caffeine_mg": {
+            "min": 215,
+            "max": 280,
+            "typical": 245
+          },
+          "serving_ml": 240,
+          "serving_oz": 8,
+          "caffeine_level": "very_high",
+          "pct_daily_limit": 62,
+          "served_hot": false,
+          "served_iced": false,
+          "milk": false,
+          "origin": null
+        },
+        {
+          "id": "cold_brew_concentrate",
+          "name": "Cold brew concentrate",
+          "description": "2:1 or 3:1 ratio, always dilute before drinking. Undiluted is extreme \u2014 not for direct consumption.",
+          "caffeine_mg": {
+            "min": 300,
+            "max": 400,
+            "typical": 350
+          },
+          "serving_ml": 120,
+          "serving_oz": 4,
+          "caffeine_level": "extreme",
+          "pct_daily_limit": 88,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": false,
+          "warning": "Always dilute before drinking. A single undiluted serving can approach the full daily limit.",
+          "origin": null
+        },
+        {
+          "id": "cold_brew_tonic",
+          "name": "Cold brew tonic",
+          "description": "Cold brew poured over tonic water and ice. Bitter-sweet, bubbly, refreshing. Popular in Scandinavian caf\u00e9s.",
+          "caffeine_mg": {
+            "min": 100,
+            "max": 150,
+            "typical": 125
+          },
+          "serving_ml": 270,
+          "serving_oz": 9,
+          "caffeine_level": "high",
+          "pct_daily_limit": 31,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": false,
+          "origin": "Scandinavia"
+        }
+      ]
+    },
+    {
+      "id": "iced_espresso",
+      "label": "Iced espresso-based",
+      "drinks": [
+        {
+          "id": "iced_americano",
+          "name": "Iced americano",
+          "description": "Espresso shots poured over ice, topped with cold water. Clean, bold flavor without milk.",
+          "caffeine_mg": {
+            "min": 63,
+            "max": 126,
+            "typical": 95
+          },
+          "serving_ml": 360,
+          "serving_oz": 12,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 24,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": false,
+          "origin": null
+        },
+        {
+          "id": "iced_latte",
+          "name": "Iced latte",
+          "description": "Espresso + cold milk poured over ice. Smooth and mild. One of the most popular iced drinks globally.",
+          "caffeine_mg": {
+            "min": 63,
+            "max": 150,
+            "typical": 100
+          },
+          "serving_ml": 360,
+          "serving_oz": 12,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 27,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": true,
+          "origin": null
+        },
+        {
+          "id": "iced_cappuccino",
+          "name": "Iced cappuccino",
+          "description": "Espresso over ice with cold milk and cold foam on top.",
+          "caffeine_mg": {
+            "min": 63,
+            "max": 126,
+            "typical": 95
+          },
+          "serving_ml": 240,
+          "serving_oz": 8,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 24,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": true,
+          "origin": null
+        },
+        {
+          "id": "iced_flat_white",
+          "name": "Iced flat white",
+          "description": "Double ristretto over ice with a small amount of cold milk. Stronger coffee-to-milk ratio than an iced latte.",
+          "caffeine_mg": {
+            "min": 120,
+            "max": 140,
+            "typical": 130
+          },
+          "serving_ml": 165,
+          "serving_oz": 6,
+          "caffeine_level": "high",
+          "pct_daily_limit": 33,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": true,
+          "origin": "Australia"
+        },
+        {
+          "id": "iced_macchiato",
+          "name": "Iced macchiato",
+          "description": "Cold milk and ice in a glass, espresso poured on top creating a layered look.",
+          "caffeine_mg": {
+            "min": 63,
+            "max": 150,
+            "typical": 100
+          },
+          "serving_ml": 360,
+          "serving_oz": 12,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 27,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": true,
+          "origin": null
+        },
+        {
+          "id": "iced_mocha",
+          "name": "Iced mocha",
+          "description": "Espresso + chocolate syrup + cold milk over ice. Optionally topped with whipped cream.",
+          "caffeine_mg": {
+            "min": 95,
+            "max": 175,
+            "typical": 130
+          },
+          "serving_ml": 360,
+          "serving_oz": 12,
+          "caffeine_level": "high",
+          "pct_daily_limit": 34,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": true,
+          "origin": null
+        },
+        {
+          "id": "shakerato",
+          "name": "Shakerato",
+          "description": "Espresso and ice shaken vigorously in a cocktail shaker until foamy. Served in a coupe glass.",
+          "caffeine_mg": {
+            "min": 63,
+            "max": 126,
+            "typical": 90
+          },
+          "serving_ml": 105,
+          "serving_oz": 3.5,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 22,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": false,
+          "origin": "Italy"
+        },
+        {
+          "id": "iced_cortado",
+          "name": "Iced cortado",
+          "description": "Equal parts espresso and cold milk over ice. Small and punchy.",
+          "caffeine_mg": {
+            "min": 60,
+            "max": 70,
+            "typical": 63
+          },
+          "serving_ml": 120,
+          "serving_oz": 4,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 16,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": true,
+          "origin": "Spain"
+        },
+        {
+          "id": "espresso_tonic",
+          "name": "Espresso tonic",
+          "description": "A shot of espresso dropped into cold tonic water over ice. Bright, effervescent, bittersweet.",
+          "caffeine_mg": {
+            "min": 63,
+            "max": 126,
+            "typical": 90
+          },
+          "serving_ml": 240,
+          "serving_oz": 8,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 24,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": false,
+          "origin": null
+        }
+      ]
+    },
+    {
+      "id": "blended_specialty",
+      "label": "Blended & specialty iced",
+      "drinks": [
+        {
+          "id": "iced_drip_over_ice",
+          "name": "Iced coffee (drip over ice)",
+          "description": "Hot-brewed drip coffee poured directly over ice. Simple and common. Watch for dilution from melting ice \u2014 caffeine remains unchanged.",
+          "caffeine_mg": {
+            "min": 95,
+            "max": 165,
+            "typical": 130
+          },
+          "serving_ml": 360,
+          "serving_oz": 12,
+          "caffeine_level": "high",
+          "pct_daily_limit": 33,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": false,
+          "origin": null
+        },
+        {
+          "id": "frappuccino",
+          "name": "Frappuccino / blended coffee",
+          "description": "Blended ice + espresso or coffee base + milk + syrup. Topped with whipped cream. High sugar, moderate caffeine.",
+          "caffeine_mg": {
+            "min": 65,
+            "max": 130,
+            "typical": 95
+          },
+          "serving_ml": 360,
+          "serving_oz": 12,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 25,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": true,
+          "origin": "USA"
+        },
+        {
+          "id": "coffee_smoothie",
+          "name": "Coffee smoothie",
+          "description": "Blended coffee or cold brew with banana, milk, protein powder, or yogurt.",
+          "caffeine_mg": {
+            "min": 60,
+            "max": 150,
+            "typical": 100
+          },
+          "serving_ml": 390,
+          "serving_oz": 13,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 26,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": true,
+          "origin": null
+        },
+        {
+          "id": "mazagran",
+          "name": "Mazagran",
+          "description": "Cold coffee + lemon juice + sugar, sometimes with rum. One of the oldest iced coffees.",
+          "caffeine_mg": {
+            "min": 60,
+            "max": 95,
+            "typical": 78
+          },
+          "serving_ml": 240,
+          "serving_oz": 8,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 19,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": false,
+          "origin": "Algeria/Portugal"
+        },
+        {
+          "id": "greek_frappe",
+          "name": "Greek frapp\u00e9",
+          "description": "Instant coffee shaken with water and ice into a thick foam. A staple of Greek caf\u00e9 culture since the 1950s.",
+          "caffeine_mg": {
+            "min": 40,
+            "max": 75,
+            "typical": 58
+          },
+          "serving_ml": 270,
+          "serving_oz": 9,
+          "caffeine_level": "low",
+          "pct_daily_limit": 14,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": false,
+          "origin": "Greece"
+        },
+        {
+          "id": "dalgona_iced",
+          "name": "Iced dalgona coffee",
+          "description": "Whipped instant coffee foam (equal parts coffee, sugar, hot water) spooned over iced milk.",
+          "caffeine_mg": {
+            "min": 60,
+            "max": 100,
+            "typical": 80
+          },
+          "serving_ml": 300,
+          "serving_oz": 10,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 20,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": true,
+          "origin": "South Korea"
+        },
+        {
+          "id": "ca_phe_sua_da",
+          "name": "Vietnamese iced coffee (C\u00e0 ph\u00ea s\u1eefa \u0111\u00e1)",
+          "description": "Strong phin-filter drip coffee over sweetened condensed milk and ice. Rich, syrupy, intensely sweet.",
+          "caffeine_mg": {
+            "min": 60,
+            "max": 100,
+            "typical": 80
+          },
+          "serving_ml": 240,
+          "serving_oz": 8,
+          "caffeine_level": "moderate",
+          "pct_daily_limit": 20,
+          "served_hot": false,
+          "served_iced": true,
+          "milk": true,
+          "origin": "Vietnam"
+        }
+      ]
+    },
+    {
+      "id": "instant_low_caff",
+      "label": "Instant & low-caffeine",
+      "drinks": [
+        {
+          "id": "instant_coffee",
+          "name": "Instant coffee",
+          "description": "Pre-brewed and freeze-dried. Quick to make, lower caffeine than drip.",
+          "caffeine_mg": {
+            "min": 30,
+            "max": 90,
+            "typical": 60
+          },
+          "serving_ml": 240,
+          "serving_oz": 8,
+          "caffeine_level": "low",
+          "pct_daily_limit": 15,
+          "served_hot": true,
+          "served_iced": true,
+          "milk": false,
+          "origin": null
+        },
+        {
+          "id": "decaf",
+          "name": "Decaf",
+          "description": "Beans with ~97% caffeine removed via solvent or water process. Not caffeine-free \u2014 just much less.",
+          "caffeine_mg": {
+            "min": 2,
+            "max": 15,
+            "typical": 7
+          },
+          "serving_ml": 240,
+          "serving_oz": 8,
+          "caffeine_level": "very_low",
+          "pct_daily_limit": 3,
+          "served_hot": true,
+          "served_iced": true,
+          "milk": false,
+          "origin": null
+        }
+      ]
+    }
+  ],
+  "caffeine_levels": {
+    "very_low": {
+      "label": "Very low",
+      "range_mg": [
+        0,
+        15
+      ]
+    },
+    "low": {
+      "label": "Low",
+      "range_mg": [
+        16,
+        60
+      ]
+    },
+    "moderate": {
+      "label": "Moderate",
+      "range_mg": [
+        61,
+        130
+      ]
+    },
+    "high": {
+      "label": "High",
+      "range_mg": [
+        131,
+        220
+      ]
+    },
+    "very_high": {
+      "label": "Very high",
+      "range_mg": [
+        221,
+        300
+      ]
+    },
+    "extreme": {
+      "label": "Extreme",
+      "range_mg": [
+        301,
+        400
+      ]
+    }
+  }
+}
