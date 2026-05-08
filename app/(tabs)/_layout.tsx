@@ -1,51 +1,24 @@
-import { Tabs } from "expo-router";
-import { Coffee, PlusCircle, Settings } from "lucide-react-native";
+import { NativeTabs } from "expo-router/unstable-native-tabs";
+import { Icon, Label } from "expo-router/unstable-native-tabs";
 
 export default function TabLayout() {
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: "#000",
-        tabBarInactiveTintColor: "rgba(0,0,0,0.35)",
-        tabBarLabelStyle: {
-          fontSize: 11,
-          fontWeight: "600",
-          letterSpacing: 0.3,
-        },
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Today",
-          tabBarIcon: ({ color, size }) => (
-            <Coffee color={color} size={size} strokeWidth={1.75} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="log"
-        options={{
-          title: "Log",
-          tabBarIcon: ({ color, size }) => (
-            <PlusCircle color={color} size={size} strokeWidth={1.75} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: "Settings",
-          tabBarIcon: ({ color, size }) => (
-            <Settings color={color} size={size} strokeWidth={1.75} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="history"
-        options={{ href: null }}
-      />
-    </Tabs>
+    <NativeTabs>
+      <NativeTabs.Trigger name="index">
+        <Icon sf="cup.and.saucer" />
+        <Label>Today</Label>
+      </NativeTabs.Trigger>
+
+      <NativeTabs.Trigger name="log">
+        <Icon sf="plus.circle" />
+        <Label>Log</Label>
+      </NativeTabs.Trigger>
+
+      <NativeTabs.Trigger name="settings">
+        <Icon sf="gearshape" />
+        <Label>Settings</Label>
+      </NativeTabs.Trigger>
+
+    </NativeTabs>
   );
 }

@@ -537,7 +537,7 @@ export default function HomeScreen() {
             <Text style={s.actionSub}>›</Text>
           </TouchableOpacity>
           <View style={s.actionDivider} />
-          <TouchableOpacity style={s.actionRow} onPress={() => router.push("/(tabs)/history")} activeOpacity={0.8}>
+          <TouchableOpacity style={s.actionRow} onPress={() => router.push("/explore")} activeOpacity={0.8}>
             <View style={s.actionRowLeft}>
               <View style={[s.actionIcon, { backgroundColor: "#f0f0f0" }]}><Coffee size={14} color="#111" strokeWidth={1.8} /></View>
               <Text style={s.actionTxt}>Explore drinks</Text>
