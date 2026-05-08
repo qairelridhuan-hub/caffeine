@@ -294,7 +294,7 @@ export default function Onboarding() {
   const slideFillAnim = useRef(new Animated.Value(0)).current;
 
   // Splash animations
-  const logoScale    = useRef(new Animated.Value(0.4)).current;
+  const logoScale    = useRef(new Animated.Value(0.1)).current;
   const logoOpacity  = useRef(new Animated.Value(0)).current;
   const splashOpacity = useRef(new Animated.Value(0)).current;
   const btnOpacity   = useRef(new Animated.Value(0)).current;
@@ -449,10 +449,11 @@ export default function Onboarding() {
         Animated.timing(taglineO, { toValue: 1, duration: 220, useNativeDriver: true }),
         Animated.spring(taglineY, { toValue: 0, damping: 14, stiffness: 160, useNativeDriver: true }),
       ]),
-      // button rises
+      Animated.delay(400),
+      // button rises last
       Animated.parallel([
-        Animated.timing(btnOpacity,   { toValue: 1, duration: 250, useNativeDriver: true }),
-        Animated.spring(btnTranslate, { toValue: 0, damping: 14, stiffness: 160, useNativeDriver: true }),
+        Animated.timing(btnOpacity,   { toValue: 1, duration: 300, useNativeDriver: true }),
+        Animated.spring(btnTranslate, { toValue: 0, damping: 12, stiffness: 140, useNativeDriver: true }),
       ]),
     ]).start();
   }, [phase]);
@@ -551,11 +552,11 @@ export default function Onboarding() {
   // Splash
   return (
     <Animated.View style={[styles.splash, { opacity: splashOpacity }]}>
-      <StatusBar style="light" />
+      <StatusBar style="dark" />
 
       {/* back arrow */}
       <TouchableOpacity style={styles.splashBack} onPress={goBackToSlides} activeOpacity={0.7}>
-        <ChevronLeft color="rgba(255,255,255,0.6)" size={22} strokeWidth={2} />
+        <ChevronLeft color="#bbb" size={22} strokeWidth={2} />
       </TouchableOpacity>
 
       {/* logo + ring pulse */}
@@ -578,7 +579,7 @@ export default function Onboarding() {
                 }],
               }}
             >
-              <AnimatedCoffeeCup fillAnim={fillAnim} size={72} />
+              <AnimatedCoffeeCup fillAnim={fillAnim} stroke="#111" size={72} />
             </Animated.View>
             <Animated.View style={{ position: "absolute", opacity: beanSwapO }}>
               <View style={{ width: 110, height: 110, borderRadius: 55, overflow: "hidden" }}>
@@ -595,7 +596,9 @@ export default function Onboarding() {
 
       {/* app name */}
       <Animated.View style={{ alignItems: "center", opacity: titleO, transform: [{ translateY: titleY }] }}>
-        <Text style={styles.splashTitle}>caffeine</Text>
+        <Text style={styles.splashTitle}>
+          caffe<Text style={styles.splashTitleDot}>.</Text>ine
+        </Text>
         <View style={styles.splashDivider} />
       </Animated.View>
 
@@ -720,7 +723,7 @@ const styles = StyleSheet.create({
 
   splash: {
     flex: 1,
-    backgroundColor: "#000",
+    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
     gap: 28,
@@ -749,31 +752,33 @@ const styles = StyleSheet.create({
     height: 140,
     borderRadius: 70,
     borderWidth: 2,
-    borderColor: "rgba(255,255,255,0.35)",
+    borderColor: "rgba(0,0,0,0.08)",
   },
   splashLogoCircle: {
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: "rgba(255,255,255,0.08)",
+    backgroundColor: "#f5f5f5",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.15)",
+    borderColor: "#ebebeb",
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
   },
-  splashTitle: { fontSize: 42, fontWeight: "800", color: "#fff", letterSpacing: -1 },
-  splashDivider: { width: 32, height: 2, backgroundColor: "rgba(255,255,255,0.2)", borderRadius: 2, marginTop: 10 },
-  splashSub: { fontSize: 15, color: "rgba(255,255,255,0.55)", letterSpacing: 0.2, textAlign: "center" },
-  splashSub2: { fontSize: 13, color: "rgba(255,255,255,0.3)", letterSpacing: 0.2, marginTop: 4, textAlign: "center" },
+  splashTitle: { fontSize: 42, fontWeight: "800", color: "#111", letterSpacing: -1 },
+  splashTitleDot: { fontSize: 42, fontWeight: "800", color: "#888" },
+  splashDivider: { width: 32, height: 2, backgroundColor: "#e0e0e0", borderRadius: 2, marginTop: 10 },
+  splashSub: { fontSize: 15, color: "#888", letterSpacing: 0.2, textAlign: "center" },
+  splashSub2: { fontSize: 13, color: "#bbb", letterSpacing: 0.2, marginTop: 4, textAlign: "center" },
   continueBtn: {
-    width: "100%",
-    height: 58,
-    borderRadius: 18,
-    backgroundColor: "#fff",
+    paddingHorizontal: 36,
+    paddingVertical: 14,
+    borderRadius: 30,
+    backgroundColor: "#111",
     alignItems: "center",
     justifyContent: "center",
+    alignSelf: "center",
   },
-  continueBtnText: { fontSize: 16, fontWeight: "700", color: "#000", letterSpacing: 0.3 },
-  alreadyAccountText: { fontSize: 14, fontWeight: "500", color: "rgba(255,255,255,0.6)", letterSpacing: 0.2 },
+  continueBtnText: { fontSize: 16, fontWeight: "700", color: "#fff", letterSpacing: 0.3 },
+  alreadyAccountText: { fontSize: 14, fontWeight: "500", color: "#aaa", letterSpacing: 0.2 },
 });

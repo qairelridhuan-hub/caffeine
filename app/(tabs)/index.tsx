@@ -19,7 +19,7 @@ import Svg, {
   Polyline, Polygon, Line, Text as SvgText,
   Path, Defs, ClipPath, Rect,
 } from "react-native-svg";
-import { Bell, LogOut, Flame, Clock, Minus, Plus, X, Coffee } from "lucide-react-native";
+import { Bell, LogOut, Flame, Clock, Minus, Plus, X, Coffee, Droplets, AlarmClock, Timer } from "lucide-react-native";
 import { supabase } from "@/utils/supabase";
 import coffeeData from "@/constants/coffee_data.json";
 import { useRouter } from "expo-router";
@@ -397,7 +397,14 @@ export default function HomeScreen() {
   const [streak,      setStreak]      = useState(0);
   const [showDetails, setShowDetails] = useState(false);
   const [showLog,     setShowLog]     = useState(false);
+  const [showAbout,   setShowAbout]   = useState(false);
   const [cupStyle,    setCupStyle]    = useState<CupStyle>("mug");
+  const lastTap = useRef<number>(0);
+  const handleLogoTap = () => {
+    const now = Date.now();
+    if (now - lastTap.current < 300) setShowAbout(true);
+    lastTap.current = now;
+  };
 
   const CUP_STYLES: CupStyle[] = ["mug", "takeaway", "iced"];
 
@@ -513,9 +520,9 @@ export default function HomeScreen() {
       {/* ── Header ── */}
       <View style={s.header}>
         <View style={s.headerLeft}>
-          <View style={s.logoCircle}>
+          <TouchableOpacity onPress={handleLogoTap} activeOpacity={0.85} style={s.logoCircle}>
             <Image source={require("../../assets/logo.png")} style={{ width: 40, height: 40, borderRadius: 20 }} resizeMode="cover" />
-          </View>
+          </TouchableOpacity>
           <View>
             <Text style={s.appName}>caffeine</Text>
             <Text style={s.headerSub}>Hey, {username}!</Text>
@@ -554,7 +561,7 @@ export default function HomeScreen() {
         {/* ── Main summary card ── */}
         <View style={s.card}>
 
-          {/* Row 1: label + status */}
+          {/* Top: label + status chip */}
           <View style={s.cardTopRow}>
             <Text style={s.cupLabel}>Today's intake</Text>
             <View style={s.statusChip}>
@@ -563,10 +570,11 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          {/* Row 2: cup + right stats */}
+          {/* Two-column body */}
           <View style={s.cupSection}>
-            {/* Cup with swipe dots */}
-            <View style={{ alignItems: "center", gap: 10 }} {...cupPan.panHandlers}>
+
+            {/* Left: cup + style dots */}
+            <View style={{ alignItems: "center", gap: 8 }} {...cupPan.panHandlers}>
               <CoffeeCup pct={pct} color={statusColor} size={(W - 96) / 2} style={cupStyle} mgLabel={Math.round(totalToday)} />
               <View style={{ flexDirection: "row", gap: 5 }}>
                 {CUP_STYLES.map(cs => (
@@ -577,68 +585,69 @@ export default function HomeScreen() {
               </View>
             </View>
 
-            {/* Right: mg hero + 2 stats */}
-            <View style={{ flex: 1, gap: 12 }}>
+            {/* Right: stacked data */}
+            <View style={{ flex: 1, justifyContent: "center", gap: 14 }}>
+
+              {/* Hero mg */}
               <View>
                 <Text style={s.heroMg}>{Math.round(totalToday)}<Text style={s.heroMgUnit}> mg</Text></Text>
-                <Text style={s.limitNote}>{Math.round(pct * 100)}% of {dailyLimit}mg</Text>
                 <View style={s.progressTrack}>
                   <View style={[s.progressFill, { width: `${Math.min(pct * 100, 100)}%` as any }]} />
                 </View>
+                <Text style={s.limitNote}>{Math.round(pct * 100)}% of {dailyLimit}mg</Text>
               </View>
-              <View style={s.tileCol}>
-                <View style={s.tileItem}>
-                  <Text style={s.tileVal}>{Math.max(0, Math.round(dailyLimit - totalToday))}<Text style={s.tileUnit}> mg</Text></Text>
-                  <Text style={s.tileLbl}>remaining</Text>
+
+              {/* Data rows */}
+              <View style={s.dataRows}>
+                <View style={s.dataRow}>
+                  <Text style={s.dataLbl}>Remaining</Text>
+                  <Text style={s.dataVal}>{Math.max(0, Math.round(dailyLimit - totalToday))}<Text style={s.dataValSm}> mg</Text></Text>
                 </View>
-                <View style={s.tileItemDivider} />
-                <View style={s.tileItem}>
-                  <Text style={s.tileVal}>{atBed > 50 ? "Poor" : "Good"}</Text>
-                  <Text style={s.tileLbl}>sleep outlook</Text>
+                <View style={s.dataRow}>
+                  <Text style={s.dataLbl}>At bedtime</Text>
+                  <Text style={s.dataVal}>{Math.round(atBed)}<Text style={s.dataValSm}> mg</Text></Text>
                 </View>
+                <View style={s.dataRow}>
+                  <Text style={s.dataLbl}>Sleep</Text>
+                  <Text style={[s.dataVal, { color: atBed > 50 ? "#ef4444" : "#22c55e" }]}>{atBed > 50 ? "Poor" : "Good"}</Text>
+                </View>
+                {logs.length > 0 && (
+                  <View style={s.dataRow}>
+                    <Text style={s.dataLbl}>Drinks</Text>
+                    <Text style={s.dataVal}>{logs.length}</Text>
+                  </View>
+                )}
               </View>
+
             </View>
           </View>
 
           <View style={s.divider} />
 
-          {/* Row 3: bottom stats */}
-          <View style={s.statsRow}>
-            <View style={s.statCol}>
-              <Text style={s.statVal}>{logs.length}</Text>
-              <Text style={s.statLbl}>Drinks today</Text>
-            </View>
-            <View style={s.statSep} />
-            <View style={s.statCol}>
-              <Text style={s.statVal}>{Math.round(atBed)}<Text style={s.statValSm}>mg</Text></Text>
-              <Text style={s.statLbl}>At bedtime</Text>
-            </View>
-            {cutoff && <>
-              <View style={s.statSep} />
-              <View style={s.statCol}>
-                <Text style={s.statVal}>{cutoff}</Text>
-                <Text style={s.statLbl}>Last safe coffee</Text>
-              </View>
-            </>}
-          </View>
-
-          <View style={s.divider} />
-
-          {/* Row 4: insights */}
-          <View style={{ flexDirection: "row", gap: 10 }}>
-            <View style={s.insightItem}>
-              <Text style={s.insightIcon}>☕</Text>
+          {/* Bottom insight chips */}
+          <View style={s.insightChips}>
+            <View style={s.insightChip}>
+              <View style={s.insightChipIconBox}><Coffee size={13} color="#fff" strokeWidth={1.8} /></View>
               <View>
-                <Text style={s.insightLabel}>Can still have</Text>
-                <Text style={s.insightVal}>{canStillHave}</Text>
+                <Text style={s.insightChipLbl}>Can still have</Text>
+                <Text style={s.insightChipVal}>{canStillHave}</Text>
               </View>
             </View>
-            {timeSinceLast && (
-              <View style={s.insightItem}>
-                <Text style={s.insightIcon}>⏱</Text>
+            {cutoff && (
+              <View style={s.insightChip}>
+                <View style={s.insightChipIconBox}><AlarmClock size={13} color="#fff" strokeWidth={1.8} /></View>
                 <View>
-                  <Text style={s.insightLabel}>Last drink</Text>
-                  <Text style={s.insightVal}>{timeSinceLast}</Text>
+                  <Text style={s.insightChipLbl}>Last safe</Text>
+                  <Text style={s.insightChipVal}>{cutoff}</Text>
+                </View>
+              </View>
+            )}
+            {timeSinceLast && (
+              <View style={s.insightChip}>
+                <View style={s.insightChipIconBox}><Timer size={13} color="#fff" strokeWidth={1.8} /></View>
+                <View>
+                  <Text style={s.insightChipLbl}>Last drink</Text>
+                  <Text style={s.insightChipVal}>{timeSinceLast}</Text>
                 </View>
               </View>
             )}
@@ -688,6 +697,37 @@ export default function HomeScreen() {
         logs={logs}
         fetchLogs={fetchLogs}
       />
+
+      {/* About modal */}
+      <Modal visible={showAbout} transparent animationType="slide" onRequestClose={() => setShowAbout(false)}>
+        <Pressable style={ab.backdrop} onPress={() => setShowAbout(false)} />
+        <View style={ab.sheet}>
+          <View style={ab.handle} />
+          <Image source={require("../../assets/logo.png")} style={ab.logo} resizeMode="cover" />
+          <Text style={ab.title}>caffe<Text style={ab.titleDot}>.</Text>ine</Text>
+          <Text style={ab.version}>Version 1.0.0</Text>
+
+          <View style={ab.divider} />
+
+          <Text style={ab.sectionHead}>What is this app?</Text>
+          <Text style={ab.body}>
+            caffeine helps you understand and manage your daily caffeine intake. Log any drink, track how caffeine metabolises in your body over time, and stay within your personal limit — all in one place.
+          </Text>
+
+          <Text style={ab.sectionHead}>How it works</Text>
+          <Text style={ab.body}>
+            Each drink you log is tracked using a half-life model — caffeine in your body reduces by half every 5 hours. The app shows your real-time remaining caffeine level and estimates how much will be left at bedtime.
+          </Text>
+
+          <Text style={ab.sectionHead}>Your data</Text>
+          <Text style={ab.body}>
+            All data is stored securely in your personal account via Supabase. We never share or sell your information.
+          </Text>
+
+          <View style={ab.divider} />
+          <Text style={ab.footer}>Made with care · caffeine © 2025</Text>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -843,10 +883,24 @@ const s = StyleSheet.create({
 
   insightRow:  { flexDirection: "row", alignItems: "stretch", gap: 10, marginBottom: 4 },
   insightItem: { flex: 1, flexDirection: "row", alignItems: "center", gap: 10, backgroundColor: "#f7f7f7", borderRadius: 12, paddingHorizontal: 12, paddingVertical: 10 },
-  insightSep:  { width: 1, backgroundColor: "transparent" },
+  insightBar:  { flexDirection: "row", alignItems: "center", gap: 10 },
+  insightSep:  { width: 1, height: "100%" as any, backgroundColor: "#f0f0f0" },
   insightIcon: { fontSize: 18 },
   insightLabel:{ fontSize: 10, color: "#bbb", fontWeight: "600", letterSpacing: 0.2, marginBottom: 2 },
   insightVal:  { fontSize: 13, fontWeight: "700", color: "#111" },
+
+  dataRows:    { gap: 8 },
+  dataRow:     { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  dataLbl:     { fontSize: 12, color: "#aaa" },
+  dataVal:     { fontSize: 13, fontWeight: "700", color: "#111" },
+  dataValSm:   { fontSize: 11, fontWeight: "500", color: "#aaa" },
+
+  insightChips:       { flexDirection: "row", gap: 8 },
+  insightChip:        { flex: 1, flexDirection: "row", alignItems: "center", gap: 8, borderRadius: 14, paddingHorizontal: 12, paddingVertical: 10, backgroundColor: "#111" },
+  insightChipIconBox: { width: 26, height: 26, borderRadius: 8, backgroundColor: "rgba(255,255,255,0.12)", alignItems: "center", justifyContent: "center" },
+  insightChipIcon:    { fontSize: 14 },
+  insightChipLbl:     { fontSize: 10, color: "rgba(255,255,255,0.5)", fontWeight: "600", letterSpacing: 0.3, marginBottom: 2 },
+  insightChipVal:     { fontSize: 13, fontWeight: "700", color: "#fff" },
 
 });
 
@@ -898,4 +952,18 @@ const ls = StyleSheet.create({
   logBtnTxt:   { fontSize: 14, fontWeight: "700", color: "#fff" },
   logBtnTxtOff:{ color: "#ccc" },
   logError:    { fontSize: 12, color: "#ef4444", textAlign: "center", marginTop: 8 },
+});
+
+const ab = StyleSheet.create({
+  backdrop:    { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.4)" },
+  sheet:       { position: "absolute", bottom: 0, left: 0, right: 0, backgroundColor: "#fff", borderTopLeftRadius: 24, borderTopRightRadius: 24, paddingHorizontal: 24, paddingBottom: 48, paddingTop: 16, alignItems: "center" },
+  handle:      { width: 36, height: 4, borderRadius: 2, backgroundColor: "#e0e0e0", marginBottom: 20 },
+  logo:        { width: 56, height: 56, borderRadius: 28, marginBottom: 12 },
+  title:       { fontSize: 26, fontWeight: "800", color: "#111", letterSpacing: -0.5 },
+  titleDot:    { color: "#888" },
+  version:     { fontSize: 12, color: "#bbb", marginTop: 4, marginBottom: 20 },
+  divider:     { width: "100%", height: 1, backgroundColor: "#f0f0f0", marginVertical: 16 },
+  sectionHead: { fontSize: 12, fontWeight: "700", color: "#111", letterSpacing: 0.6, textTransform: "uppercase", alignSelf: "flex-start", marginBottom: 6 },
+  body:        { fontSize: 13, color: "#666", lineHeight: 20, alignSelf: "flex-start", marginBottom: 14 },
+  footer:      { fontSize: 11, color: "#ccc", marginTop: 4 },
 });
