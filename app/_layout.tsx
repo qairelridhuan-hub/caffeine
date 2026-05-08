@@ -11,7 +11,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="(setup)" />
-        <Stack.Screen name="explore" />
+        <Stack.Screen name="explore" options={{ animation: "slide_from_bottom" }} />
       </Stack>
     </>
   );

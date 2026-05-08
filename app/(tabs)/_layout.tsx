@@ -3,7 +3,7 @@ import { Icon, Label } from "expo-router/unstable-native-tabs";
 
 export default function TabLayout() {
   return (
-    <NativeTabs>
+    <NativeTabs tintColor="#000000">
       <NativeTabs.Trigger name="index">
         <Icon sf="cup.and.saucer" />
         <Label>Today</Label>

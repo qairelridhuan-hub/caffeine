@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
+import { PanResponder } from "react-native";
 import {
   View,
   Text,
@@ -11,6 +12,7 @@ import {
   Animated,
   Modal,
   Pressable,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Svg, {
@@ -46,51 +48,95 @@ function caffeineAt(logs: LogEntry[], t: Date) {
 }
 
 // ── Animated coffee cup ──────────────────────────────────────
-function CoffeeCup({ pct, color, size = 120 }: { pct: number; color: string; size?: number }) {
+type CupStyle = "mug" | "takeaway" | "iced";
+
+const AnimatedSvgText = Animated.createAnimatedComponent(SvgText);
+
+function CoffeeCup({ pct, color, size = 120, style = "mug", mgLabel }: { pct: number; color: string; size?: number; style?: CupStyle; mgLabel?: number }) {
   const fillAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.timing(fillAnim, {
-      toValue: Math.min(pct, 1),
-      duration: 1000,
-      useNativeDriver: false,
-    }).start();
+    Animated.timing(fillAnim, { toValue: Math.min(pct, 1), duration: 1000, useNativeDriver: false }).start();
   }, [pct]);
 
-  const TOP = 40, BOTTOM = 82, H = BOTTOM - TOP;
-  const fillHeight = fillAnim.interpolate({ inputRange: [0, 1], outputRange: [0, H] });
-  const fillY      = fillAnim.interpolate({ inputRange: [0, 1], outputRange: [BOTTOM, TOP] });
+  // Mug: fill from y=40 to y=82
+  const MUG_TOP = 40, MUG_BOT = 82, MUG_H = MUG_BOT - MUG_TOP;
+  const mugFillH = fillAnim.interpolate({ inputRange: [0, 1], outputRange: [0, MUG_H] });
+  const mugFillY = fillAnim.interpolate({ inputRange: [0, 1], outputRange: [MUG_BOT, MUG_TOP] });
+  // label sits 6px above the fill waterline
+  const mugLabelY = fillAnim.interpolate({ inputRange: [0, 1], outputRange: [MUG_BOT - 4, MUG_TOP + 8] });
 
+  // Takeaway / Iced cup: fill from y=42 to y=84
+  const CUP_TOP = 42, CUP_BOT = 84, CUP_H = CUP_BOT - CUP_TOP;
+  const cupFillH = fillAnim.interpolate({ inputRange: [0, 1], outputRange: [0, CUP_H] });
+  const cupFillY = fillAnim.interpolate({ inputRange: [0, 1], outputRange: [CUP_BOT, CUP_TOP] });
+  const cupLabelY = fillAnim.interpolate({ inputRange: [0, 1], outputRange: [CUP_BOT - 4, CUP_TOP + 8] });
+
+  if (style === "mug") {
+    return (
+      <Svg width={size} height={size} viewBox="0 0 100 100">
+        <Defs>
+          <ClipPath id="mugClip">
+            <Path d="M 20 40 Q 20 38 22 38 L 64 38 Q 66 38 66 40 L 66 80 Q 66 84 62 84 L 24 84 Q 20 84 20 80 Z" />
+          </ClipPath>
+        </Defs>
+        <AnimatedRect x={20} y={mugFillY} width={46} height={mugFillH} fill={color} clipPath="url(#mugClip)" opacity={0.9} />
+        <Path d="M 18 38 Q 18 36 20 36 L 66 36 Q 68 36 68 38 L 68 80 Q 68 86 62 86 L 24 86 Q 18 86 18 80 Z" stroke="#1a1a1a" strokeWidth={2.2} fill="none" />
+        <Path d="M 68 50 C 84 50 84 72 68 72" stroke="#1a1a1a" strokeWidth={2.2} fill="none" strokeLinecap="round" />
+        <Path d="M 32 30 Q 29 25 32 20 Q 35 15 32 10" stroke="#d0d0d0" strokeWidth={1.8} fill="none" strokeLinecap="round" />
+        <Path d="M 43 28 Q 40 23 43 18 Q 46 13 43 8"  stroke="#d0d0d0" strokeWidth={1.8} fill="none" strokeLinecap="round" />
+        <Path d="M 54 30 Q 51 25 54 20 Q 57 15 54 10" stroke="#d0d0d0" strokeWidth={1.8} fill="none" strokeLinecap="round" />
+        {mgLabel != null && pct > 0 && (
+          <AnimatedSvgText x={43} y={mugLabelY} fontSize={9} fontWeight="700" fill="#fff" textAnchor="middle" opacity={0.9}>
+            {`${mgLabel}mg`}
+          </AnimatedSvgText>
+        )}
+      </Svg>
+    );
+  }
+
+  if (style === "takeaway") {
+    return (
+      <Svg width={size} height={size} viewBox="0 0 100 100">
+        <Defs>
+          <ClipPath id="takeawayClip">
+            <Path d="M 26 42 L 30 84 Q 30 86 32 86 L 58 86 Q 60 86 60 84 L 64 42 Z" />
+          </ClipPath>
+        </Defs>
+        <AnimatedRect x={24} y={cupFillY} width={42} height={cupFillH} fill={color} clipPath="url(#takeawayClip)" opacity={0.9} />
+        <Path d="M 26 42 L 30 84 Q 30 86 32 86 L 58 86 Q 60 86 60 84 L 64 42 Z" stroke="#1a1a1a" strokeWidth={2.2} fill="none" />
+        <Path d="M 23 38 Q 23 36 25 36 L 65 36 Q 67 36 67 38 L 67 42 L 23 42 Z" stroke="#1a1a1a" strokeWidth={2.2} fill="none" />
+        <Path d="M 30 36 Q 30 30 35 30 L 55 30 Q 60 30 60 36" stroke="#1a1a1a" strokeWidth={2.2} fill="none" />
+        <Path d="M 52 30 L 62 10" stroke="#1a1a1a" strokeWidth={2.5} strokeLinecap="round" />
+        {mgLabel != null && pct > 0 && (
+          <AnimatedSvgText x={45} y={cupLabelY} fontSize={9} fontWeight="700" fill="#fff" textAnchor="middle" opacity={0.9}>
+            {`${mgLabel}mg`}
+          </AnimatedSvgText>
+        )}
+      </Svg>
+    );
+  }
+
+  // iced
   return (
     <Svg width={size} height={size} viewBox="0 0 100 100">
       <Defs>
-        <ClipPath id="dashCupClip">
-          <Path d="M 20 40 Q 20 38 22 38 L 64 38 Q 66 38 66 40 L 66 80 Q 66 84 62 84 L 24 84 Q 20 84 20 80 Z" />
+        <ClipPath id="icedClip">
+          <Path d="M 24 38 L 28 84 Q 28 87 31 87 L 59 87 Q 62 87 62 84 L 66 38 Z" />
         </ClipPath>
       </Defs>
-
-      {/* Fill */}
-      <AnimatedRect
-        x={20} y={fillY} width={46} height={fillHeight}
-        fill={color} clipPath="url(#dashCupClip)" opacity={0.9}
-      />
-
-      {/* Cup outline */}
-      <Path
-        d="M 18 38 Q 18 36 20 36 L 66 36 Q 68 36 68 38 L 68 80 Q 68 86 62 86 L 24 86 Q 18 86 18 80 Z"
-        stroke="#1a1a1a" strokeWidth={2.2} fill="none"
-      />
-
-      {/* Handle */}
-      <Path
-        d="M 68 50 C 84 50 84 72 68 72"
-        stroke="#1a1a1a" strokeWidth={2.2} fill="none" strokeLinecap="round"
-      />
-
-      {/* Steam */}
-      <Path d="M 32 30 Q 29 25 32 20 Q 35 15 32 10" stroke="#d0d0d0" strokeWidth={1.8} fill="none" strokeLinecap="round" />
-      <Path d="M 43 28 Q 40 23 43 18 Q 46 13 43 8"  stroke="#d0d0d0" strokeWidth={1.8} fill="none" strokeLinecap="round" />
-      <Path d="M 54 30 Q 51 25 54 20 Q 57 15 54 10" stroke="#d0d0d0" strokeWidth={1.8} fill="none" strokeLinecap="round" />
+      <AnimatedRect x={22} y={cupFillY} width={46} height={cupFillH} fill={color} clipPath="url(#icedClip)" opacity={0.9} />
+      <Path d="M 24 38 L 28 84 Q 28 87 31 87 L 59 87 Q 62 87 62 84 L 66 38 Z" stroke="#1a1a1a" strokeWidth={2.2} fill="none" />
+      <Path d="M 22 40 Q 22 32 45 32 Q 68 32 68 40 L 22 40 Z" stroke="#1a1a1a" strokeWidth={2.2} fill="none" />
+      <Path d="M 50 32 L 58 8" stroke="#1a1a1a" strokeWidth={2.5} strokeLinecap="round" />
+      <Rect x={30} y={55} width={12} height={10} rx={2} stroke="#1a1a1a" strokeWidth={1.5} fill="none" opacity={0.4} />
+      <Rect x={48} y={60} width={11} height={10} rx={2} stroke="#1a1a1a" strokeWidth={1.5} fill="none" opacity={0.4} />
+      <Rect x={36} y={68} width={13} height={10} rx={2} stroke="#1a1a1a" strokeWidth={1.5} fill="none" opacity={0.4} />
+      {mgLabel != null && pct > 0 && (
+        <AnimatedSvgText x={45} y={cupLabelY} fontSize={9} fontWeight="700" fill="#fff" textAnchor="middle" opacity={0.9}>
+          {`${mgLabel}mg`}
+        </AnimatedSvgText>
+      )}
     </Svg>
   );
 }
@@ -351,6 +397,22 @@ export default function HomeScreen() {
   const [streak,      setStreak]      = useState(0);
   const [showDetails, setShowDetails] = useState(false);
   const [showLog,     setShowLog]     = useState(false);
+  const [cupStyle,    setCupStyle]    = useState<CupStyle>("mug");
+
+  const CUP_STYLES: CupStyle[] = ["mug", "takeaway", "iced"];
+
+  const cupPan = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dx) > 10 && Math.abs(g.dx) > Math.abs(g.dy),
+      onPanResponderRelease: (_, g) => {
+        if (g.dx < -30) {
+          setCupStyle(s => { const i = CUP_STYLES.indexOf(s); return CUP_STYLES[(i + 1) % CUP_STYLES.length]; });
+        } else if (g.dx > 30) {
+          setCupStyle(s => { const i = CUP_STYLES.indexOf(s); return CUP_STYLES[(i - 1 + CUP_STYLES.length) % CUP_STYLES.length]; });
+        }
+      },
+    })
+  ).current;
 
   useEffect(() => {
     (async () => {
@@ -413,6 +475,29 @@ export default function HomeScreen() {
     return null;
   })();
 
+  // #5 — time since last drink
+  const timeSinceLast = (() => {
+    if (!logs.length) return null;
+    const mins = Math.floor((Date.now() - new Date(logs[0].consumed_at).getTime()) / 60000);
+    if (mins < 1) return "Just now";
+    if (mins < 60) return `${mins}m ago`;
+    const h = Math.floor(mins / 60), m = mins % 60;
+    return m > 0 ? `${h}h ${m}m ago` : `${h}h ago`;
+  })();
+
+  // #3 — what you can still have
+  const canStillHave = (() => {
+    const rem = dailyLimit - totalToday;
+    if (rem <= 0) return "You've hit your limit";
+    const espresso = 63, drip = 95, energy = 160;
+    if (rem >= energy) return `${Math.floor(rem / energy)} energy drink${Math.floor(rem / energy) > 1 ? "s" : ""}`;
+    if (rem >= drip)   return `${Math.floor(rem / drip)} drip coffee`;
+    if (rem >= espresso) return `${Math.floor(rem / espresso)} espresso shot${Math.floor(rem / espresso) > 1 ? "s" : ""}`;
+    return "Go easy — nearly there";
+  })();
+
+  // #4 — sparkline points (last 12h, every 30 min)
+
 
   if (loading) return (
     <SafeAreaView style={s.safe}>
@@ -429,7 +514,7 @@ export default function HomeScreen() {
       <View style={s.header}>
         <View style={s.headerLeft}>
           <View style={s.logoCircle}>
-            <Coffee size={17} color="#111" strokeWidth={1.8} />
+            <Image source={require("../../assets/logo.png")} style={{ width: 40, height: 40, borderRadius: 20 }} resizeMode="cover" />
           </View>
           <View>
             <Text style={s.appName}>caffeine</Text>
@@ -438,13 +523,13 @@ export default function HomeScreen() {
         </View>
         <View style={s.headerActions}>
           <TouchableOpacity style={s.actionBtn} activeOpacity={0.7}>
-            <Bell size={17} color="#555" strokeWidth={1.8} />
+            <Bell size={17} color="#111" strokeWidth={1.8} />
           </TouchableOpacity>
           <TouchableOpacity
             style={s.actionBtn} activeOpacity={0.7}
             onPress={async () => { await supabase.auth.signOut(); router.replace("/onboarding"); }}
           >
-            <LogOut size={17} color="#555" strokeWidth={1.8} />
+            <LogOut size={17} color="#111" strokeWidth={1.8} />
           </TouchableOpacity>
         </View>
       </View>
@@ -469,7 +554,7 @@ export default function HomeScreen() {
         {/* ── Main summary card ── */}
         <View style={s.card}>
 
-          {/* Top: label + status chip */}
+          {/* Row 1: label + status */}
           <View style={s.cardTopRow}>
             <Text style={s.cupLabel}>Today's intake</Text>
             <View style={s.statusChip}>
@@ -478,24 +563,46 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          {/* Cup + right column */}
+          {/* Row 2: cup + right stats */}
           <View style={s.cupSection}>
-            <CoffeeCup pct={pct} color={statusColor} size={(W - 64) / 2} />
-            <View style={s.cupNumbers}>
-              <Text style={s.cupMg}>{Math.round(totalToday)}<Text style={s.cupMgUnit}> mg</Text></Text>
-              <Text style={s.limitNote}>{Math.round(pct * 100)}% of {dailyLimit}mg</Text>
-              <View style={s.divider} />
-              <Text style={s.statVal}>{Math.max(0, Math.round(dailyLimit - totalToday))}<Text style={s.statValSm}> mg</Text></Text>
-              <Text style={s.statLbl}>remaining</Text>
-              <View style={{ height: 10 }} />
-              <Text style={s.statVal}>{atBed > 50 ? "Poor" : "Good"}</Text>
-              <Text style={s.statLbl}>sleep outlook</Text>
+            {/* Cup with swipe dots */}
+            <View style={{ alignItems: "center", gap: 10 }} {...cupPan.panHandlers}>
+              <CoffeeCup pct={pct} color={statusColor} size={(W - 96) / 2} style={cupStyle} mgLabel={Math.round(totalToday)} />
+              <View style={{ flexDirection: "row", gap: 5 }}>
+                {CUP_STYLES.map(cs => (
+                  <TouchableOpacity key={cs} onPress={() => setCupStyle(cs)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+                    <View style={{ width: cs === cupStyle ? 16 : 5, height: 5, borderRadius: 3, backgroundColor: cs === cupStyle ? "#111" : "#e0e0e0" }} />
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+
+            {/* Right: mg hero + 2 stats */}
+            <View style={{ flex: 1, gap: 12 }}>
+              <View>
+                <Text style={s.heroMg}>{Math.round(totalToday)}<Text style={s.heroMgUnit}> mg</Text></Text>
+                <Text style={s.limitNote}>{Math.round(pct * 100)}% of {dailyLimit}mg</Text>
+                <View style={s.progressTrack}>
+                  <View style={[s.progressFill, { width: `${Math.min(pct * 100, 100)}%` as any }]} />
+                </View>
+              </View>
+              <View style={s.tileCol}>
+                <View style={s.tileItem}>
+                  <Text style={s.tileVal}>{Math.max(0, Math.round(dailyLimit - totalToday))}<Text style={s.tileUnit}> mg</Text></Text>
+                  <Text style={s.tileLbl}>remaining</Text>
+                </View>
+                <View style={s.tileItemDivider} />
+                <View style={s.tileItem}>
+                  <Text style={s.tileVal}>{atBed > 50 ? "Poor" : "Good"}</Text>
+                  <Text style={s.tileLbl}>sleep outlook</Text>
+                </View>
+              </View>
             </View>
           </View>
 
           <View style={s.divider} />
 
-          {/* Bottom stats row */}
+          {/* Row 3: bottom stats */}
           <View style={s.statsRow}>
             <View style={s.statCol}>
               <Text style={s.statVal}>{logs.length}</Text>
@@ -506,14 +613,34 @@ export default function HomeScreen() {
               <Text style={s.statVal}>{Math.round(atBed)}<Text style={s.statValSm}>mg</Text></Text>
               <Text style={s.statLbl}>At bedtime</Text>
             </View>
-            {cutoff && (
-              <>
-                <View style={s.statSep} />
-                <View style={s.statCol}>
-                  <Text style={s.statVal}>{cutoff}</Text>
-                  <Text style={s.statLbl}>Last safe coffee</Text>
+            {cutoff && <>
+              <View style={s.statSep} />
+              <View style={s.statCol}>
+                <Text style={s.statVal}>{cutoff}</Text>
+                <Text style={s.statLbl}>Last safe coffee</Text>
+              </View>
+            </>}
+          </View>
+
+          <View style={s.divider} />
+
+          {/* Row 4: insights */}
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <View style={s.insightItem}>
+              <Text style={s.insightIcon}>☕</Text>
+              <View>
+                <Text style={s.insightLabel}>Can still have</Text>
+                <Text style={s.insightVal}>{canStillHave}</Text>
+              </View>
+            </View>
+            {timeSinceLast && (
+              <View style={s.insightItem}>
+                <Text style={s.insightIcon}>⏱</Text>
+                <View>
+                  <Text style={s.insightLabel}>Last drink</Text>
+                  <Text style={s.insightVal}>{timeSinceLast}</Text>
                 </View>
-              </>
+              </View>
             )}
           </View>
 
@@ -531,7 +658,7 @@ export default function HomeScreen() {
           <View style={s.actionDivider} />
           <TouchableOpacity style={s.actionRow} onPress={() => setShowDetails(true)} activeOpacity={0.8}>
             <View style={s.actionRowLeft}>
-              <View style={[s.actionIcon, { backgroundColor: "#f0f0f0" }]}><Text style={{ fontSize: 13, color: "#111" }}>↗</Text></View>
+              <View style={s.actionIcon}><Text style={{ fontSize: 13, color: "#fff" }}>↗</Text></View>
               <Text style={s.actionTxt}>View details</Text>
             </View>
             <Text style={s.actionSub}>›</Text>
@@ -539,7 +666,7 @@ export default function HomeScreen() {
           <View style={s.actionDivider} />
           <TouchableOpacity style={s.actionRow} onPress={() => router.push("/explore")} activeOpacity={0.8}>
             <View style={s.actionRowLeft}>
-              <View style={[s.actionIcon, { backgroundColor: "#f0f0f0" }]}><Coffee size={14} color="#111" strokeWidth={1.8} /></View>
+              <View style={s.actionIcon}><Coffee size={14} color="#fff" strokeWidth={1.8} /></View>
               <Text style={s.actionTxt}>Explore drinks</Text>
             </View>
             <Text style={s.actionSub}>›</Text>
@@ -574,10 +701,10 @@ const s = StyleSheet.create({
     paddingHorizontal: 20, paddingTop: 4, paddingBottom: 12,
   },
   headerLeft:  { flexDirection: "row", alignItems: "center", gap: 10 },
-  logoCircle:  { width: 40, height: 40, borderRadius: 20, backgroundColor: "#e8e8e8", alignItems: "center", justifyContent: "center" },
+  logoCircle:  { width: 40, height: 40, borderRadius: 20, backgroundColor: "#fff", alignItems: "center", justifyContent: "center", overflow: "hidden" },
   appName:     { fontSize: 15, fontWeight: "800", color: "#111", letterSpacing: -0.3 },
   headerSub:   { fontSize: 12, color: "#aaa", marginTop: 1 },
-  headerActions: { flexDirection: "row", gap: 2, backgroundColor: "#e8e8e8", borderRadius: 22, paddingHorizontal: 4, paddingVertical: 4 },
+  headerActions: { flexDirection: "row", gap: 2, backgroundColor: "#fff", borderRadius: 22, paddingHorizontal: 4, paddingVertical: 4, shadowColor: "#000", shadowOpacity: 0.08, shadowRadius: 10, shadowOffset: { width: 0, height: 4 }, elevation: 4 },
   actionBtn:   { width: 32, height: 32, alignItems: "center", justifyContent: "center", borderRadius: 16 },
 
   content: { paddingHorizontal: 16, paddingBottom: 110 },
@@ -591,20 +718,42 @@ const s = StyleSheet.create({
   card: {
     backgroundColor: "#fff", borderRadius: 20,
     paddingHorizontal: 20, paddingVertical: 18,
-    marginBottom: 12,
-    shadowColor: "#000", shadowOpacity: 0.04, shadowRadius: 14, shadowOffset: { width: 0, height: 2 }, elevation: 2,
+    marginBottom: 16,
+    shadowColor: "#000", shadowOpacity: 0.06, shadowRadius: 16, shadowOffset: { width: 0, height: 4 }, elevation: 3,
   },
 
-  // Cup + numbers
+  // Card band (dark top)
+  cardBand:         { backgroundColor: "#111", borderRadius: 40, paddingHorizontal: 18, paddingVertical: 10, flexDirection: "row", alignItems: "center", justifyContent: "space-between", alignSelf: "stretch" },
+  bandLabel:        { fontSize: 9, fontWeight: "700", color: "rgba(255,255,255,0.4)", letterSpacing: 1.2 },
+  bandMg:           { fontSize: 18, fontWeight: "800", color: "#fff", letterSpacing: -0.5 },
+  bandMgUnit:       { fontSize: 12, fontWeight: "400", color: "rgba(255,255,255,0.4)" },
+  bandProgressTrack:{ height: 2, backgroundColor: "rgba(255,255,255,0.12)", borderRadius: 2, marginTop: 6, marginBottom: 2, overflow: "hidden" },
+  bandProgressFill: { height: 2, backgroundColor: "#fff", borderRadius: 2 },
+
+  // Status chip (inside band — white style)
+  statusChip:       { flexDirection: "row", alignSelf: "flex-start", alignItems: "center", gap: 5, borderRadius: 20, paddingHorizontal: 11, paddingVertical: 5, backgroundColor: "rgba(255,255,255,0.15)", borderWidth: 1, borderColor: "rgba(255,255,255,0.2)" },
+  statusDot:        { width: 5, height: 5, borderRadius: 3, backgroundColor: "#fff" },
+  statusChipText:   { fontSize: 11, fontWeight: "700", color: "#fff", letterSpacing: 0.2 },
+
+  // Tile row
+  tileRow:         { flexDirection: "row", alignItems: "center", backgroundColor: "#111", borderRadius: 14, paddingVertical: 14 },
+  tile:            { flex: 1, alignItems: "center", gap: 3 },
+  tileDivider:     { width: 1, height: 28, backgroundColor: "rgba(255,255,255,0.12)" },
+  tileVal:         { fontSize: 15, fontWeight: "800", color: "#fff", letterSpacing: -0.4 },
+  tileUnit:        { fontSize: 10, fontWeight: "500", color: "rgba(255,255,255,0.4)" },
+  tileLbl:         { fontSize: 10, color: "rgba(255,255,255,0.4)", fontWeight: "500" },
+
+  tileCol:         { flex: 1, backgroundColor: "#111", borderRadius: 14, overflow: "hidden" },
+  tileItem:        { flex: 1, alignItems: "flex-start", paddingHorizontal: 14, paddingVertical: 12 },
+  tileItemDivider: { height: 1, backgroundColor: "rgba(255,255,255,0.08)", marginHorizontal: 14 },
+
   cupSection:  { flexDirection: "row", alignItems: "center", gap: 16 },
-  cupNumbers:  { flex: 1, gap: 4 },
   cupLabel:    { fontSize: 11, color: "#aaa", fontWeight: "500", letterSpacing: 0.2 },
-  cupMg:       { fontSize: 42, fontWeight: "800", color: "#111", letterSpacing: -1.5, lineHeight: 46 },
-  cupMgUnit:   { fontSize: 16, fontWeight: "500", color: "#bbb" },
-  statusChip:  { flexDirection: "row", alignSelf: "flex-start", alignItems: "center", gap: 5, borderRadius: 20, paddingHorizontal: 12, paddingVertical: 5, backgroundColor: "#111" },
-  statusDot:   { width: 5, height: 5, borderRadius: 3, backgroundColor: "#fff" },
-  statusChipText: { fontSize: 11, fontWeight: "700", color: "#fff", letterSpacing: 0.2 },
-  limitNote:   { fontSize: 11, color: "#bbb", fontWeight: "500", marginTop: 4 },
+  limitNote:   { fontSize: 12, color: "#bbb", fontWeight: "500", marginTop: 4 },
+  heroMg:        { fontSize: 38, fontWeight: "800", color: "#111", letterSpacing: -1.5, lineHeight: 42 },
+  heroMgUnit:    { fontSize: 15, fontWeight: "500", color: "#bbb" },
+  progressTrack: { height: 4, backgroundColor: "#f0f0f0", borderRadius: 4, marginTop: 8, overflow: "hidden" },
+  progressFill:  { height: 4, backgroundColor: "#111", borderRadius: 4 },
 
   divider:     { height: 1, backgroundColor: "#f2f2f2", marginVertical: 14 },
 
@@ -682,13 +831,22 @@ const s = StyleSheet.create({
   logTriggerTxt:  { fontSize: 14, fontWeight: "700", color: "#fff" },
   logTriggerSub:  { fontSize: 12, color: "rgba(255,255,255,0.45)", fontWeight: "500" },
 
-  actionsCard:  { backgroundColor: "#fff", borderRadius: 18, overflow: "hidden", marginBottom: 12, shadowColor: "#000", shadowOpacity: 0.04, shadowRadius: 14, shadowOffset: { width: 0, height: 2 }, elevation: 2 },
+  actionsCard:  { backgroundColor: "#fff", borderRadius: 18, overflow: "hidden", marginBottom: 16, shadowColor: "#000", shadowOpacity: 0.06, shadowRadius: 16, shadowOffset: { width: 0, height: 4 }, elevation: 3 },
   actionRow:    { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 18, paddingVertical: 16 },
   actionRowLeft:{ flexDirection: "row", alignItems: "center", gap: 12 },
   actionIcon:   { width: 30, height: 30, borderRadius: 15, backgroundColor: "#111", alignItems: "center", justifyContent: "center" },
   actionTxt:    { fontSize: 14, fontWeight: "700", color: "#111" },
   actionSub:    { fontSize: 12, color: "#bbb", fontWeight: "500" },
   actionDivider:{ height: 1, backgroundColor: "#f4f4f4", marginHorizontal: 18 },
+
+  sparkLabel:  { fontSize: 10, fontWeight: "600", color: "#bbb", letterSpacing: 0.4, marginBottom: 6, textTransform: "uppercase" },
+
+  insightRow:  { flexDirection: "row", alignItems: "stretch", gap: 10, marginBottom: 4 },
+  insightItem: { flex: 1, flexDirection: "row", alignItems: "center", gap: 10, backgroundColor: "#f7f7f7", borderRadius: 12, paddingHorizontal: 12, paddingVertical: 10 },
+  insightSep:  { width: 1, backgroundColor: "transparent" },
+  insightIcon: { fontSize: 18 },
+  insightLabel:{ fontSize: 10, color: "#bbb", fontWeight: "600", letterSpacing: 0.2, marginBottom: 2 },
+  insightVal:  { fontSize: 13, fontWeight: "700", color: "#111" },
 
 });
 
