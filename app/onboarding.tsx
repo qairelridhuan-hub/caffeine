@@ -7,12 +7,14 @@ import {
   Dimensions,
   TouchableOpacity,
   Animated,
+  ActivityIndicator,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Svg, { Path, Rect, Defs, ClipPath } from "react-native-svg";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useRouter } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { supabase } from "@/utils/supabase";
 import {
   Coffee,
   Target,
@@ -268,6 +270,8 @@ export default function Onboarding() {
   const [index, setIndex] = useState(0);
   const [prevIndex, setPrevIndex] = useState<number | null>(null);
   const [iconAnimKey, setIconAnimKey] = useState(0);
+  const [sessionChecked, setSessionChecked] = useState(false);
+  const [hasSession, setHasSession] = useState(false);
   const busy = useRef(false);
   const dirRef = useRef<1 | -1>(1);
 
@@ -330,7 +334,7 @@ export default function Onboarding() {
     ]).start();
   }
 
-  // Mount: show slide 0 + play entry + start fill
+  // Always start at slides
   useEffect(() => {
     inO.setValue(1);
     resetEntry();
@@ -395,6 +399,21 @@ export default function Onboarding() {
     titleY.setValue(24); titleO.setValue(0);
     taglineY.setValue(16); taglineO.setValue(0);
 
+    // Mark first launch done
+    AsyncStorage.setItem("first_launch_done", "true");
+
+    // Check existing session
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (session) {
+        // Try to refresh in case token is stale
+        const { data } = await supabase.auth.refreshSession();
+        setHasSession(!!data.session);
+      } else {
+        setHasSession(false);
+      }
+      setSessionChecked(true);
+    });
+
     // fade in background
     Animated.timing(splashOpacity, { toValue: 1, duration: 250, useNativeDriver: true }).start();
 
@@ -437,11 +456,6 @@ export default function Onboarding() {
       ]),
     ]).start();
   }, [phase]);
-
-  async function finish() {
-    await AsyncStorage.setItem("onboarded", "1");
-    router.replace("/(tabs)");
-  }
 
   const slide = SLIDES[index];
 
@@ -591,11 +605,33 @@ export default function Onboarding() {
         <Text style={styles.splashSub2}>Track your daily caffeine intake.</Text>
       </Animated.View>
 
-      {/* button */}
-      <Animated.View style={{ opacity: btnOpacity, transform: [{ translateY: btnTranslate }], width: "100%", marginTop: 16 }}>
-        <TouchableOpacity style={styles.continueBtn} onPress={finish} activeOpacity={0.85}>
-          <Text style={styles.continueBtnText}>Get Started</Text>
-        </TouchableOpacity>
+      {/* buttons */}
+      <Animated.View style={{ opacity: btnOpacity, transform: [{ translateY: btnTranslate }], width: "100%", marginTop: 16, alignItems: "center", gap: 16 }}>
+        {!sessionChecked ? (
+          <ActivityIndicator color="#fff" size="small" />
+        ) : hasSession ? (
+          <TouchableOpacity
+            style={styles.continueBtn}
+            onPress={async () => {
+              const { data: { user } } = await supabase.auth.getUser();
+              if (!user) { router.replace("/(auth)/login"); return; }
+              const { data } = await supabase.from("profiles").select("onboarding_complete").eq("id", user.id).single();
+              router.replace(data?.onboarding_complete ? "/(tabs)" : "/(setup)");
+            }}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.continueBtnText}>Get Started</Text>
+          </TouchableOpacity>
+        ) : (
+          <>
+            <TouchableOpacity style={styles.continueBtn} onPress={() => router.replace("/(auth)/signup")} activeOpacity={0.85}>
+              <Text style={styles.continueBtnText}>Sign Up</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => router.replace("/(auth)/login")} activeOpacity={0.7}>
+              <Text style={styles.alreadyAccountText}>Log In</Text>
+            </TouchableOpacity>
+          </>
+        )}
       </Animated.View>
     </Animated.View>
   );
@@ -739,4 +775,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   continueBtnText: { fontSize: 16, fontWeight: "700", color: "#000", letterSpacing: 0.3 },
+  alreadyAccountText: { fontSize: 14, fontWeight: "500", color: "rgba(255,255,255,0.6)", letterSpacing: 0.2 },
 });

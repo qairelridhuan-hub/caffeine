@@ -1,25 +1,16 @@
 import { Tabs } from "expo-router";
 import { Coffee, PlusCircle, Settings } from "lucide-react-native";
-import { Colors } from "@/constants/colors";
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: Colors.primary,
-        tabBarInactiveTintColor: Colors.textTertiary,
-        tabBarStyle: {
-          backgroundColor: Colors.white,
-          borderTopColor: Colors.border,
-          borderTopWidth: 1,
-          height: 88,
-          paddingBottom: 28,
-          paddingTop: 12,
-        },
+        tabBarActiveTintColor: "#000",
+        tabBarInactiveTintColor: "rgba(0,0,0,0.35)",
         tabBarLabelStyle: {
           fontSize: 11,
-          fontWeight: "500",
+          fontWeight: "600",
           letterSpacing: 0.3,
         },
       }}
@@ -50,6 +41,10 @@ export default function TabLayout() {
             <Settings color={color} size={size} strokeWidth={1.75} />
           ),
         }}
+      />
+      <Tabs.Screen
+        name="history"
+        options={{ href: null }}
       />
     </Tabs>
   );
